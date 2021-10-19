@@ -13,6 +13,7 @@ const memory = require('aedes-persistence')
 const mqemitter = require('mqemitter')
 const Client = require('./lib/client')
 const { $SYS_PREFIX } = require('./lib/utils')
+const matcher = require('../../CFM/VAST.js/lib/matcher')
 
 module.exports = Aedes.Server = Aedes
 
@@ -78,6 +79,10 @@ function Aedes (opts) {
 
   this.clients = {}
   this.brokers = {}
+  this.matcher = new matcher(true, '127.0.0.1', 10000, 166.5, 832.5, 400, this, function(id) {
+    console.log('Matcher onJoin with id: '+id)
+    //console.log('Matcher id: '+that.matcher._id)
+  });
 
   const heartbeatTopic = $SYS_PREFIX + that.id + '/heartbeat'
   this._heartbeatInterval = setInterval(heartbeat, opts.heartbeatInterval)
@@ -171,6 +176,7 @@ function storeRetained (packet, done) {
 }
 
 function emitPacket (packet, done) {
+  //console.trace()
   this.broker.mq.emit(packet, done)
 }
 
@@ -247,21 +253,25 @@ const publishFuncsQoS = [
   callPublished
 ]
 Aedes.prototype.publish = function (packet, client, done) {
-  if (typeof client === 'function') {
+  //console.log('Aedes prototype publish cmd: <' + packet.cmd + '> qos: <'+packet.qos+ '> payload: <'+packet.payload+ '> topic: <'+packet.topic+' client <' +client+ '> done: <'+ done+'>')
+    if (typeof client === 'function') {
     done = client
     client = null
   }
   const p = new Packet(packet, this)
   const publishFuncs = p.qos > 0 ? publishFuncsQoS : publishFuncsSimple
 
+  //console.log(publishFuncs)
   this._series(new PublishState(this, client, packet), publishFuncs, p, done)
 }
 
 Aedes.prototype.subscribe = function (topic, func, done) {
+  //console.log('Aedes prototype subscribe ' + topic)
   this.mq.on(topic, func, done)
 }
 
 Aedes.prototype.unsubscribe = function (topic, func, done) {
+  //console.log('Aedes prototype unsubscribe ' + topic)
   this.mq.removeListener(topic, func, done)
 }
 
