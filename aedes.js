@@ -79,8 +79,8 @@ function Aedes (opts) {
   this.clients = {}
   this.brokers = {}
 
-  if (opts.VAST == true) {
-    const matcher = require('../../imonology/VAST.js/lib/matcher')
+  if (opts.VAST === true) {
+    const matcher = require('vast.js/lib/matcher')
     this.matcher = new matcher(opts.VASTGateway, '0.0.0.0', opts.VASTport, opts.VASTx, opts.VASTy, opts.VASTradius, function (id) {
       console.log('Matcher onJoin with id: ' + id)
       //console.log('Matcher id: '+that.matcher._id)
