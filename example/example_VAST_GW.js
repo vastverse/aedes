@@ -4,10 +4,14 @@
 
 const aedesOpts = {
   VAST: true,
-  VASTGateway: true
+  VASTGateway: true,
+  VASTx:30,
+  VASTy:30,
+  VASTport:8000,
+  VASTradius:50
 }
 
-const aedes = require('./aedes')(aedesOpts)
+const aedes = require('../aedes')(aedesOpts)
 const server = require('net').createServer(aedes.handle)
 const httpServer = require('http').createServer()
 const ws = require('websocket-stream')

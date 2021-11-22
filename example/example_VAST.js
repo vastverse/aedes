@@ -4,15 +4,19 @@
 
 const aedesOpts = {
   VAST: true,
-  VASTGateway: true
+  VASTGateway: false,
+  VASTx:130,
+  VASTy:130,
+  VASTport:8000,
+  VASTradius:50
 }
 
-const aedes = require('./aedes')(aedesOpts)
+const aedes = require('../aedes')(aedesOpts)
 const server = require('net').createServer(aedes.handle)
 const httpServer = require('http').createServer()
 const ws = require('websocket-stream')
-const port = 1883
-const wsPort = 8888
+const port = 1884
+const wsPort = 8889
 
 
 server.listen(port, function () {

@@ -13,7 +13,6 @@ const memory = require('aedes-persistence')
 const mqemitter = require('mqemitter')
 const Client = require('./lib/client')
 const { $SYS_PREFIX } = require('./lib/utils')
-const matcher = require('../../CFM/VAST.js/lib/matcher')
 
 module.exports = Aedes.Server = Aedes
 
@@ -79,10 +78,14 @@ function Aedes (opts) {
 
   this.clients = {}
   this.brokers = {}
-  this.matcher = new matcher(true, '127.0.0.1', 10000, 166.5, 832.5, 400, this, function(id) {
-    console.log('Matcher onJoin with id: '+id)
-    //console.log('Matcher id: '+that.matcher._id)
-  });
+
+  if (opts.VAST == true) {
+    const matcher = require('../../imonology/VAST.js/lib/matcher')
+    this.matcher = new matcher(opts.VASTGateway, '0.0.0.0', opts.VASTport, opts.VASTx, opts.VASTy, opts.VASTradius, function (id) {
+      console.log('Matcher onJoin with id: ' + id)
+      //console.log('Matcher id: '+that.matcher._id)
+    }, this);
+  }
 
   const heartbeatTopic = $SYS_PREFIX + that.id + '/heartbeat'
   this._heartbeatInterval = setInterval(heartbeat, opts.heartbeatInterval)
@@ -229,6 +232,9 @@ function DoEnqueues () {
   }
 }
 
+
+
+
 // + is 43
 // # is 35
 function removeSharp (sub) {
@@ -252,6 +258,7 @@ const publishFuncsQoS = [
   emitPacket,
   callPublished
 ]
+
 Aedes.prototype.publish = function (packet, client, done) {
   //console.log('Aedes prototype publish cmd: <' + packet.cmd + '> qos: <'+packet.qos+ '> payload: <'+packet.payload+ '> topic: <'+packet.topic+' client <' +client+ '> done: <'+ done+'>')
     if (typeof client === 'function') {
