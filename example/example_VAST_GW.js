@@ -5,8 +5,8 @@
 const aedesOpts = {
   VAST: true,
   VASTGateway: true,
-  VASTx:30,
-  VASTy:30,
+  VASTx:250,
+  VASTy:500,
   VASTport:8000,
   VASTradius:50
 }
