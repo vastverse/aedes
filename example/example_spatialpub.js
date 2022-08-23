@@ -1,5 +1,5 @@
 var mqtt = require('mqtt')
-var client = mqtt.connect('mqtt://localhost:1883')
+var client = mqtt.connect('ws://172.31.3.194:8888')
 
 var publish = {
             x : 27,
@@ -8,8 +8,8 @@ var publish = {
             channel : 1
         };
 
-var payload = 'Hello spatial MQTT <10,10,30>'
-var subscribe = {x: 10, y: 10, radius: 30, channel: 1};
+var payload = 'Hello spatial MQTT <80,80,30>'
+var subscribe = {x: 80, y: 80, radius: 30, channel: 1};
 
 //var topic = 'normal MQTT'
 //console.log('Subscribing to topic: '+topic)
