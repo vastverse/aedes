@@ -79,9 +79,18 @@ function Aedes (opts) {
   this.clients = {}
   this.brokers = {}
 
+  console.log(opts)
   if (opts.VAST === true) {
     const matcher = require('vast.js/lib/matcher')
-    this.matcher = new matcher(opts.VASTGateway, '0.0.0.0', opts.VASTport, opts.VASTx, opts.VASTy, opts.VASTradius, function (id) {
+    let VASTopts = {
+      useMQTT : true,
+      isGateway : opts.VASTGateway,
+      GW_host : "0.0.0.0",
+      GW_port : opts.VASTport,
+      broker : this
+    }
+    //this.matcher = new matcher(opts.VASTGateway, '127.0.0.1', opts.VASTport, opts.VASTx, opts.VASTy, opts.VASTradius, function (id) {
+    this.matcher = new matcher(opts.VASTx, opts.VASTy, opts.VASTradius, VASTopts, function (id) {
       console.log('Matcher onJoin with id: ' + id)
       //console.log('Matcher id: '+that.matcher._id)
     }, this);
