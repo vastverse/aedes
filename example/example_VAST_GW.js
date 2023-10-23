@@ -1,21 +1,22 @@
 'use strict'
 
 
+const port = 1883
 
 const aedesOpts = {
   VAST: true,
   VASTGateway: true,
   VASTx:250,
   VASTy:500,
-  VASTport:8888,
-  VASTradius:50
+  VASTport:8080,
+  VASTradius:50,
+  MQTTport:port
 }
 
 const aedes = require('../aedes')(aedesOpts)
 const server = require('net').createServer(aedes.handle)
 const httpServer = require('http').createServer()
 const ws = require('websocket-stream')
-const port = 1883
 const wsPort = 8888
 
 
@@ -40,9 +41,9 @@ aedes.on('connectionError', function (client, err) {
 })
 
 aedes.on('publish', function (packet, client) {
-  if (client) {
-    console.log('message from client', client.id)
-  }
+  //if (client) {
+  //  console.log('message from client', client.id)
+  //}
 })
 
 aedes.on('subscribe', function (subscriptions, client) {

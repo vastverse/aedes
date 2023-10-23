@@ -1,5 +1,6 @@
 'use strict'
 
+const port = 1884
 
 
 const aedesOpts = {
@@ -7,15 +8,15 @@ const aedesOpts = {
   VASTGateway: false,
   VASTx:500,
   VASTy:500,
-  VASTport:8000,
-  VASTradius:100
+  VASTport:8080,
+  VASTradius:100,
+  MQTTport:port
 }
 
 const aedes = require('../aedes')(aedesOpts)
 const server = require('net').createServer(aedes.handle)
 const httpServer = require('http').createServer()
 const ws = require('websocket-stream')
-const port = 1884
 const wsPort = 8889
 
 

@@ -40,6 +40,8 @@ function Aedes (opts) {
     return new Aedes(opts)
   }
 
+  console.log(this.handle)
+
   opts = Object.assign({}, defaultOptions, opts)
 
   this.id = opts.id || uuidv4()
@@ -87,13 +89,15 @@ function Aedes (opts) {
       isGateway : opts.VASTGateway,
       GW_host : "0.0.0.0",
       GW_port : opts.VASTport,
-      broker : this
+      broker: this,
+      brokerPort: opts.MQTTport,
     }
     //this.matcher = new matcher(opts.VASTGateway, '127.0.0.1', opts.VASTport, opts.VASTx, opts.VASTy, opts.VASTradius, function (id) {
     this.matcher = new matcher(opts.VASTx, opts.VASTy, opts.VASTradius, VASTopts, function (id) {
       console.log('Matcher onJoin with id: ' + id)
       //console.log('Matcher id: '+that.matcher._id)
     }, this);
+    this.authenticate = this.matcher.mqttAuthenticate;
   }
 
   const heartbeatTopic = $SYS_PREFIX + that.id + '/heartbeat'
